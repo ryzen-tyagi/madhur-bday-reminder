@@ -1,9 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Mail, Copy, Check, ArrowUpRight } from 'lucide-react';
+import { Clock, Mail, Copy, Check, ArrowUpRight, PartyPopper, Sparkles } from 'lucide-react';
+import Confetti from 'react-confetti';
+import { motion } from 'framer-motion';
 
 export default function BirthdayReminderDashboard() {
   const [copied, setCopied] = useState(false);
   const [timeLeft, setTimeLeft] = useState('');
+  const [isBirthday, setIsBirthday] = useState(false);
+  const [windowDimensions, setWindowDimensions] = useState({ 
+    width: window.innerWidth, 
+    height: window.innerHeight 
+  });
+
+  useEffect(() => {
+    const handleResize = () => setWindowDimensions({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const emailData = {
     to: "aditya02bisht@gmail.com",
@@ -19,7 +32,7 @@ export default function BirthdayReminderDashboard() {
       const difference = target - now;
 
       if (difference <= 0) {
-        setTimeLeft("It's midnight! Birthday time 🎉");
+        setIsBirthday(true);
         return;
       }
 
@@ -46,6 +59,83 @@ export default function BirthdayReminderDashboard() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // -------------------------------------------------------------
+  // THE CRAZY CELEBRATION UI (Triggered at Midnight)
+  // -------------------------------------------------------------
+  if (isBirthday) {
+    return (
+      <div className="min-h-screen bg-black overflow-hidden relative flex flex-col items-center justify-center p-6 font-sans">
+        
+        {/* Confetti Explosion */}
+        <Confetti 
+          width={windowDimensions.width} 
+          height={windowDimensions.height} 
+          recycle={true}
+          numberOfPieces={600}
+          gravity={0.15}
+          colors={['#FF1493', '#00FFFF', '#FFD700', '#FF4500', '#7FFF00']}
+        />
+        
+        {/* Floating GIFs in Background */}
+        <motion.img 
+          initial={{ opacity: 0, x: -300, y: -200 }}
+          animate={{ opacity: 0.8, x: 0, y: [0, -30, 0], rotate: [-10, 10, -10] }}
+          transition={{ duration: 2, y: { repeat: Infinity, duration: 3 }, rotate: { repeat: Infinity, duration: 4 } }}
+          src="https://media.giphy.com/media/26FPpSuhgHvU6hCPe/giphy.gif" 
+          alt="Minions Party"
+          className="absolute top-10 left-10 w-48 h-48 md:w-64 md:h-64 object-cover rounded-full shadow-2xl shadow-purple-500/50 hidden sm:block z-0"
+        />
+        
+        <motion.img 
+          initial={{ opacity: 0, x: 300, y: 200 }}
+          animate={{ opacity: 0.8, x: 0, y: [0, 30, 0], rotate: [10, -10, 10] }}
+          transition={{ duration: 2.5, y: { repeat: Infinity, duration: 4 }, rotate: { repeat: Infinity, duration: 5 } }}
+          src="https://media.giphy.com/media/3o6MbhYjXivpejLs39/giphy.gif" 
+          alt="Spongebob Party"
+          className="absolute bottom-10 right-10 w-56 h-56 md:w-80 md:h-80 object-cover rounded-3xl shadow-2xl shadow-pink-500/50 hidden sm:block z-0"
+        />
+
+        {/* Center Celebration Card */}
+        <motion.div 
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 80, damping: 12 }}
+          className="relative z-10 bg-white/10 backdrop-blur-2xl border border-white/30 p-8 md:p-16 rounded-[3rem] text-center shadow-[0_0_120px_rgba(236,72,153,0.6)] max-w-4xl w-full mx-4"
+        >
+          <motion.div
+            animate={{ scale: [1, 1.2, 1], rotate: [0, 15, -15, 0] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="mb-8 flex justify-center text-yellow-400"
+          >
+            <PartyPopper size={100} />
+          </motion.div>
+          
+          <h1 className="text-5xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 mb-6 drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
+            HAPPY BIRTHDAY
+            <br className="hidden md:block" /> MADHUR!
+          </h1>
+          
+          <p className="text-xl md:text-3xl text-white font-bold tracking-widest mb-10 drop-shadow-md">
+            IT'S MIDNIGHT! LET'S GOOOO 🎉
+          </p>
+
+          <div className="flex justify-center gap-4">
+            <motion.button 
+              whileHover={{ scale: 1.1, boxShadow: "0 0 40px rgba(236,72,153,1)" }}
+              whileTap={{ scale: 0.9 }}
+              className="bg-gradient-to-r from-pink-500 to-orange-400 text-white font-bold py-4 px-10 rounded-full shadow-[0_0_20px_rgba(236,72,153,0.8)] text-xl flex items-center gap-3 transition-all"
+            >
+              <Sparkles /> Time to Celebrate! <Sparkles />
+            </motion.button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // -------------------------------------------------------------
+  // ORIGINAL UI (The Reminder Dashboard)
+  // -------------------------------------------------------------
   return (
     <div className="min-h-screen bg-[#0B0F19] text-slate-200 flex flex-col items-center justify-center p-6 font-sans antialiased">
       <div className="w-full max-w-xl bg-[#151D30]/60 backdrop-blur-md border border-slate-800/80 rounded-2xl p-8 shadow-2xl">
