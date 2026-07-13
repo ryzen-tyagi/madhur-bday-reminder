@@ -27,8 +27,8 @@ export default function BirthdayReminderDashboard() {
   useEffect(() => {
     const calculateCountdown = () => {
       const now = new Date();
-      // Target is exactly midnight 14th July 2026
-      const target = new Date(2026, 6, 14, 0, 0, 0); 
+      // Target is exactly 10:27 PM for local testing
+      const target = new Date(2026, 6, 13, 22, 27, 0);
       const difference = target - now;
 
       if (difference <= 0) {
@@ -80,21 +80,21 @@ export default function BirthdayReminderDashboard() {
         
         {/* Floating GIFs in Background - Positioned Further Out */}
         <motion.img 
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 0.9, scale: 1, y: [0, -30, 0], rotate: [-10, 10, -10] }}
+          initial={{ scale: 0.8 }}
+          animate={{ scale: 1, y: [0, -30, 0], rotate: [-10, 10, -10] }}
           transition={{ duration: 2, y: { repeat: Infinity, duration: 4 }, rotate: { repeat: Infinity, duration: 5 } }}
           src="https://media.giphy.com/media/26FPpSuhgHvU6hCPe/giphy.gif" 
           alt="Minions Party"
-          className="absolute top-[10%] left-[2%] sm:left-[10%] w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 object-cover rounded-full shadow-2xl shadow-purple-500/60 z-0 pointer-events-none"
+          className="absolute top-[5%] left-[5%] sm:top-[10%] sm:left-[10%] w-28 h-28 sm:w-32 sm:h-32 md:w-48 md:h-48 object-cover rounded-full shadow-2xl shadow-purple-500/60 z-20 pointer-events-none opacity-90"
         />
         
         <motion.img 
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 0.9, scale: 1, y: [0, 30, 0], rotate: [10, -10, 10] }}
+          initial={{ scale: 0.8 }}
+          animate={{ scale: 1, y: [0, 30, 0], rotate: [10, -10, 10] }}
           transition={{ duration: 2.5, y: { repeat: Infinity, duration: 4.5 }, rotate: { repeat: Infinity, duration: 5.5 } }}
           src="https://media.giphy.com/media/3o6MbhYjXivpejLs39/giphy.gif" 
           alt="Spongebob Party"
-          className="absolute bottom-[10%] right-[2%] sm:right-[10%] w-28 h-28 sm:w-40 sm:h-40 md:w-56 md:h-56 object-cover rounded-[2rem] shadow-2xl shadow-pink-500/60 z-0 pointer-events-none"
+          className="absolute bottom-[5%] right-[5%] sm:bottom-[10%] sm:right-[10%] w-32 h-32 sm:w-40 sm:h-40 md:w-56 md:h-56 object-cover rounded-[2rem] shadow-2xl shadow-pink-500/60 z-20 pointer-events-none opacity-90"
         />
 
         {/* Center Celebration Card - Much cleaner sizing for desktop */}
