@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Mail, Copy, Check, ArrowUpRight, PartyPopper, Sparkles } from 'lucide-react';
+import { Clock, Mail, Copy, Check, ArrowUpRight, PartyPopper, ChevronDown, Heart } from 'lucide-react';
 import Confetti from 'react-confetti';
 import { motion } from 'framer-motion';
+import { Typewriter } from 'react-simple-typewriter';
 
 export default function BirthdayReminderDashboard() {
   const [copied, setCopied] = useState(false);
@@ -27,8 +28,8 @@ export default function BirthdayReminderDashboard() {
   useEffect(() => {
     const calculateCountdown = () => {
       const now = new Date();
-      // Target is exactly 10:27 PM for local testing
-      const target = new Date(2026, 6, 13, 22, 27, 0);
+      // Target is exactly midnight 14th July 2026
+      const target = new Date(2026, 6, 14, 0, 0, 0);
       const difference = target - now;
 
       if (difference <= 0) {
@@ -60,78 +61,150 @@ export default function BirthdayReminderDashboard() {
   };
 
   // -------------------------------------------------------------
-  // THE CRAZY CELEBRATION UI (Triggered at Midnight)
+  // THE LONG-SCROLL CELEBRATION PAGE
   // -------------------------------------------------------------
   if (isBirthday) {
     return (
-      <div className="min-h-screen w-full bg-[#050505] overflow-hidden relative flex flex-col items-center justify-center p-4 font-sans">
+      <div className="w-full bg-[#050505] text-white overflow-x-hidden font-sans selection:bg-pink-500/30">
         
-        {/* Confetti Explosion */}
-        <div className="absolute inset-0 pointer-events-none z-50">
+        {/* Persistent Confetti */}
+        <div className="fixed inset-0 pointer-events-none z-50">
           <Confetti 
             width={windowDimensions.width} 
             height={windowDimensions.height} 
             recycle={true}
-            numberOfPieces={windowDimensions.width < 768 ? 200 : 500}
-            gravity={0.15}
+            numberOfPieces={windowDimensions.width < 768 ? 150 : 350}
+            gravity={0.12}
             colors={['#FF1493', '#00FFFF', '#FFD700', '#FF4500', '#7FFF00']}
           />
         </div>
-        
-        {/* Floating GIFs in Background - Positioned Further Out */}
-        <motion.img 
-          initial={{ scale: 0.8 }}
-          animate={{ scale: 1, y: [0, -30, 0], rotate: [-10, 10, -10] }}
-          transition={{ duration: 2, y: { repeat: Infinity, duration: 4 }, rotate: { repeat: Infinity, duration: 5 } }}
-          src="https://media.giphy.com/media/26FPpSuhgHvU6hCPe/giphy.gif" 
-          alt="Minions Party"
-          className="absolute top-[5%] left-[5%] sm:top-[10%] sm:left-[10%] w-28 h-28 sm:w-32 sm:h-32 md:w-48 md:h-48 object-cover rounded-full shadow-2xl shadow-purple-500/60 z-20 pointer-events-none opacity-90"
-        />
-        
-        <motion.img 
-          initial={{ scale: 0.8 }}
-          animate={{ scale: 1, y: [0, 30, 0], rotate: [10, -10, 10] }}
-          transition={{ duration: 2.5, y: { repeat: Infinity, duration: 4.5 }, rotate: { repeat: Infinity, duration: 5.5 } }}
-          src="https://media.giphy.com/media/3o6MbhYjXivpejLs39/giphy.gif" 
-          alt="Spongebob Party"
-          className="absolute bottom-[5%] right-[5%] sm:bottom-[10%] sm:right-[10%] w-32 h-32 sm:w-40 sm:h-40 md:w-56 md:h-56 object-cover rounded-[2rem] shadow-2xl shadow-pink-500/60 z-20 pointer-events-none opacity-90"
-        />
 
-        {/* Center Celebration Card - Much cleaner sizing for desktop */}
-        <motion.div 
-          initial={{ scale: 0, y: 50 }}
-          animate={{ scale: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 100, damping: 15 }}
-          className="relative z-10 bg-white/5 backdrop-blur-xl border border-white/20 p-8 md:p-12 rounded-[2rem] text-center shadow-[0_0_100px_rgba(236,72,153,0.3)] w-full max-w-sm sm:max-w-lg md:max-w-2xl mx-auto flex flex-col items-center justify-center"
-        >
+        {/* SECTION 1: HERO */}
+        <section className="min-h-[100dvh] relative flex flex-col items-center justify-center p-6 text-center">
+          {/* Ambient Glows */}
+          <div className="absolute top-[-10%] left-[-20%] w-[80vw] h-[80vw] md:w-[50vw] md:h-[50vw] bg-pink-600/20 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute bottom-[-10%] right-[-20%] w-[70vw] h-[70vw] md:w-[40vw] md:h-[40vw] bg-cyan-600/20 blur-[100px] rounded-full pointer-events-none" />
+
           <motion.div
             animate={{ scale: [1, 1.1, 1], rotate: [0, 10, -10, 0] }}
             transition={{ repeat: Infinity, duration: 2 }}
-            className="mb-6 flex justify-center text-yellow-300 drop-shadow-[0_0_15px_rgba(253,224,71,0.8)]"
+            className="mb-8 z-10"
           >
-            <PartyPopper className="w-16 h-16 sm:w-20 sm:h-20" />
+            <PartyPopper className="w-20 h-20 md:w-32 md:h-32 text-yellow-400 drop-shadow-[0_0_30px_rgba(253,224,71,0.6)]" />
           </motion.div>
           
-          <h1 className="w-full text-5xl sm:text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-pink-400 via-purple-400 to-cyan-400 mb-4 drop-shadow-md leading-tight uppercase tracking-tight">
-            Happy <br /> Birthday <br /> Madhur!
-          </h1>
-          
-          <p className="text-lg sm:text-xl md:text-2xl text-white/90 font-bold tracking-widest mb-8 uppercase w-full">
-            It's midnight! Let's goooo 🎉
-          </p>
+          <motion.h1 
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, type: "spring" }}
+            className="text-[12vw] sm:text-[9vw] md:text-8xl lg:text-9xl font-black bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-400 bg-clip-text text-transparent mb-6 drop-shadow-2xl leading-[1.1] uppercase z-10"
+          >
+            Happy<br/>Birthday<br/>Madhur!
+          </motion.h1>
 
-          <div className="flex justify-center w-full">
-            <motion.button 
-              whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(236,72,153,0.8)" }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-r from-pink-500 to-orange-500 text-white font-bold py-4 px-8 rounded-full shadow-[0_0_20px_rgba(236,72,153,0.6)] text-sm sm:text-lg flex items-center justify-center gap-2 transition-all border border-white/20 w-full sm:w-auto"
-            >
-              <Sparkles className="w-5 h-5 shrink-0" /> 
-              <span>Time to Celebrate!</span>
-              <Sparkles className="w-5 h-5 shrink-0" />
-            </motion.button>
+          <div className="text-xl md:text-4xl font-bold text-white/90 h-16 z-10">
+            <Typewriter
+              words={[
+                "Hope you have a wonderful day!",
+                "Filled with joy and happiness.",
+                "Let's celebrate like crazy! 🎉",
+                "Wishing you all the success!"
+              ]}
+              loop={0}
+              cursor
+              cursorStyle='|'
+              typeSpeed={70}
+              deleteSpeed={50}
+              delaySpeed={1500}
+            />
           </div>
-        </motion.div>
+
+          <motion.div 
+            animate={{ y: [0, 20, 0] }} 
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="absolute bottom-10 z-10 flex flex-col items-center text-white/50"
+          >
+            <span className="text-xs uppercase tracking-widest mb-2 font-bold">Scroll Down</span>
+            <ChevronDown className="w-8 h-8" />
+          </motion.div>
+        </section>
+
+        {/* SECTION 2: POLAROID MEMORIES */}
+        <section className="min-h-screen py-24 px-4 flex flex-col items-center justify-center bg-gradient-to-b from-[#050505] to-[#1a0b2e] relative z-10">
+          <motion.h2 
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+            className="text-4xl md:text-6xl font-black mb-16 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-400 text-center uppercase tracking-wider"
+          >
+            Golden Memories ✨
+          </motion.h2>
+
+          <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-center justify-center max-w-6xl w-full">
+            {/* Photo 1 */}
+            <motion.div 
+              initial={{ opacity: 0, x: -50, rotate: -10 }}
+              whileInView={{ opacity: 1, x: 0, rotate: -3 }}
+              whileHover={{ scale: 1.05, rotate: 0, zIndex: 30 }}
+              viewport={{ once: true }}
+              className="bg-white p-4 pb-16 md:pb-24 rounded-sm shadow-2xl w-full max-w-sm cursor-pointer transition-shadow hover:shadow-[0_0_50px_rgba(255,255,255,0.2)]"
+            >
+              <div className="overflow-hidden bg-gray-200 aspect-square rounded-sm">
+                <img src="/IMG-20260118-WA0000.jpg" alt="Memory 1" className="w-full h-full object-cover" />
+              </div>
+              <p className="text-black text-center mt-6 text-2xl font-bold font-serif opacity-80">Good times!</p>
+            </motion.div>
+
+            {/* Photo 2 */}
+            <motion.div 
+              initial={{ opacity: 0, x: 50, rotate: 10 }}
+              whileInView={{ opacity: 1, x: 0, rotate: 4 }}
+              whileHover={{ scale: 1.05, rotate: 0, zIndex: 30 }}
+              viewport={{ once: true }}
+              className="bg-white p-4 pb-16 md:pb-24 rounded-sm shadow-2xl w-full max-w-sm cursor-pointer transition-shadow hover:shadow-[0_0_50px_rgba(255,255,255,0.2)]"
+            >
+              <div className="overflow-hidden bg-gray-200 aspect-square rounded-sm">
+                <img src="/IMG-20260201-WA0018.jpg" alt="Memory 2" className="w-full h-full object-cover" />
+              </div>
+              <p className="text-black text-center mt-6 text-2xl font-bold font-serif opacity-80">Unforgettable</p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* SECTION 3: VIDEO MESSAGE */}
+        <section className="min-h-screen py-24 px-4 flex flex-col items-center justify-center bg-gradient-to-b from-[#1a0b2e] to-black relative z-10">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="text-4xl md:text-6xl font-black mb-12 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 text-center uppercase tracking-wider"
+          >
+            A Special Message 🎥
+          </motion.h2>
+
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+            className="relative p-2 md:p-4 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-3xl shadow-[0_0_60px_rgba(0,255,255,0.2)] max-w-4xl w-full"
+          >
+            <div className="bg-black rounded-2xl overflow-hidden aspect-video">
+              <video 
+                src="/VID-20260112-WA0009.mp4" 
+                controls 
+                autoPlay 
+                loop 
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+            className="mt-20 flex flex-col items-center"
+          >
+            <Heart className="w-12 h-12 text-rose-500 mb-6 animate-pulse" fill="currentColor" />
+            <p className="text-xl md:text-4xl text-center font-bold text-white/90 max-w-4xl leading-relaxed px-4">
+              Wishing you all the happiness, success, and amazing moments in the year ahead! 
+              Let's make this year the best one yet! 🎉🎂
+            </p>
+          </motion.div>
+        </section>
+
       </div>
     );
   }
